@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.10-SNAPSHOT'
+	id 'fabric-loom' version '1.9.2'
 	id 'maven-publish'
 }
 
@@ -22,7 +22,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"modid" {
+		"vanilla-atlas" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
@@ -88,3 +88,15 @@ publishing {
 		// retrieving dependencies.
 	}
 }
+
+task copyToInstance(type: Copy) {
+	dependsOn build
+	from "${buildDir}/libs/${archives_base_name}-${version}.jar"
+	into "${System.getProperty('user.home')}/Library/Application Support/PrismLauncher/instances/Vanilla Atlas Dev/.minecraft/mods"
+}
+
+task cleanModsFolder(type: Delete) {
+	delete "${System.getProperty('user.home')}/Library/Application Support/PrismLauncher/instances/Vanilla Atlas Dev/.minecraft/mods/${archives_base_name}-${version}.jar"
+}
+
+copyToInstance.dependsOn cleanModsFolder
